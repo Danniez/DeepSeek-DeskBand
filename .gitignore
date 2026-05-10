@@ -1,0 +1,48 @@
+# ==================== Build outputs ====================
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.xml
+*.dll.config
+
+# ==================== MSI installer output ====================
+installer/*.msi
+installer/*.wixpdb
+
+# ==================== Visual Studio ====================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.ide/
+UpgradeLog*.htm
+UpgradeLog*.htm.*
+
+# ==================== .NET / C# ====================
+*.nupkg
+*.nupkg.metadata
+*.cache
+*.nuspec
+project.lock.json
+[Dd]ebug/
+[Rr]elease/
+
+# ==================== Generated files ====================
+# StrongName.snk 由 install.ps1 / installer\build-installer.ps1 自动生成，不提交
+StrongName.snk
+
+# ==================== IDE / Editor ====================
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.log
+
+# ==================== NuGet ====================
+packages/
+*.nuget.props
+*.nuget.targets
