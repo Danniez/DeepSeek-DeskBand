@@ -1,16 +1,21 @@
 # DeepSeek DeskBand
 
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+
 > **English** · [README.en.md](./README.en.md)
 > 
 > 本项目所有代码均由 Github Copilot 使用 DeepSeek-V4 模型生成。本人仅进行极少量的 UI 界面数值以及字符串调整，本行是项目中唯一人工输入的文字。
 
 > **Windows 任务栏余额显示器** —— 在 Windows 任务栏实时显示 DeepSeek API 可用余额
 
+![预览](preview.png)
+![设置预览](preview_settings.png)
+
 ## 一键编译安装
 
 ```powershell
 # 在 Windows 上打开 PowerShell 7（管理员），进入项目目录：
-cd D:\Project\deepseek-usage\DeskBandWidget
+cd 项目目录
 .\install.ps1
 ```
 
