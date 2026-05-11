@@ -8,6 +8,8 @@
 
 > **Windows 任务栏余额显示器** —— 在 Windows 任务栏实时显示 DeepSeek API 可用余额
 
+## 任务栏效果
+
 ![预览](preview.png)
 
 ## 一键编译安装
@@ -20,7 +22,7 @@ cd 项目目录
 
 `install.ps1` 会自动完成：清理 → 生成密钥 → 编译 → COM注册 → 重启任务栏。
 
-安装后右键任务栏 → **工具栏** → 勾选 **"DeepSeek DeskBand"**，然后右键组件 → 设置 API Key 即可。
+安装后右键任务栏 → **工具栏** → 勾选 **"DeepSeek DeskBand"**，然后左键点击组件 → 设置 API Key 即可。
 
 ---
 
@@ -61,7 +63,7 @@ cd 项目目录
 
 1. 双击 `DeepSeekDeskBand.msi` → 下一步 → 安装
 2. 右键任务栏 → **工具栏** → 勾选 **"DeepSeek DeskBand"**
-3. 右键组件 → **设置 API Key**
+3. 左键点击组件 → **设置 API Key**
 
 ### 卸载
 
@@ -120,7 +122,7 @@ taskkill /f /im explorer.exe && start explorer.exe
 
 ## 设置 API Key
 
-1. 任务栏右键组件 → **设置 API Key...**
+1. 任务栏左键点击组件 → **设置 API Key...**
 2. 输入 DeepSeek API Key（`sk-...`）
 3. 点 **测试连接** 验证
 4. 点 **保存** → Key 存入 Windows 凭据管理器（加密存储）
@@ -132,17 +134,7 @@ taskkill /f /im explorer.exe && start explorer.exe
 | 余额显示 | 任务栏实时显示 `xx.xx` |
 | 自动刷新 | 每 30 秒自动查询 |
 | 状态灯 | 绿=正常 / 黄=未配置 / 红=错误 |
-| 右键菜单 | 刷新余额 / 设置 Key / 查看详情 / 关于 |
 | 详情面板 | 点击弹出：总余额 / 充值余额 / 赠送余额 |
 | 安全存储 | API Key 存 Windows Credential Manager，卸载自动清除 |
 
-## 任务栏效果
-
-```
-┌───────────────────────────────────────────────┐
-│ DeepSeek      资讯和兴趣  ...                  │
-│ 82.50  ●                                      │
-└───────────────────────────────────────────────┘
-          ↑ 绿色=正常 黄色=未配 红色=出错
-```
 

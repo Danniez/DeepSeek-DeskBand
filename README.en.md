@@ -6,6 +6,8 @@
 
 > **Windows taskbar balance monitor** — displays your DeepSeek API balance in real time on the Windows taskbar.
 
+## Taskbar Preview
+
 ![Preview](preview.png)
 
 ## One-Click Build & Install
@@ -18,7 +20,7 @@ cd .
 
 `install.ps1` automatically: cleans → generates strong-name key → builds → registers COM → restarts taskbar.
 
-After installation, right-click the taskbar → **Toolbars** → check **"DeepSeek DeskBand"**, then right-click the widget → Set API Key.
+After installation, right-click the taskbar → **Toolbars** → check **"DeepSeek DeskBand"**, then left-click the widget → Set API Key.
 
 ---
 
@@ -59,7 +61,7 @@ Output: `installer\DeepSeekDeskBand.msi`
 
 1. Double-click `DeepSeekDeskBand.msi` → Next → Install
 2. Right-click taskbar → **Toolbars** → check **"DeepSeek DeskBand"**
-3. Right-click the widget → **Set API Key**
+3. Left-click the widget → **Set API Key**
 
 ### Uninstall
 
@@ -118,7 +120,7 @@ taskkill /f /im explorer.exe && start explorer.exe
 
 ## Setting Up API Key
 
-1. Right-click the widget on the taskbar → **Set API Key...**
+1. Left-click the widget on the taskbar → **Set API Key...**
 2. Enter your DeepSeek API Key (`sk-...`)
 3. Click **Test Connection** to verify
 4. Click **Save** → Key is stored encrypted in Windows Credential Manager
@@ -130,16 +132,6 @@ taskkill /f /im explorer.exe && start explorer.exe
 | Balance Display | Real-time balance shown on the taskbar |
 | Auto Refresh | Queries every 30 seconds |
 | Status Indicator | Green=OK / Yellow=Not configured / Red=Error |
-| Context Menu | Refresh / Set Key / View Details / About |
 | Detail Panel | Click to view: Total / Topped-up / Granted balance |
 | Secure Storage | API Key saved in Windows Credential Manager, auto-cleaned on uninstall |
 
-## Taskbar Preview
-
-```
-┌───────────────────────────────────────────────┐
-│ DeepSeek      News and Interests ...           │
-│ 82.50  ●                                      │
-└───────────────────────────────────────────────┘
-          ↑ Green=OK  Yellow=No Key  Red=Error
-```
