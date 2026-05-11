@@ -7,7 +7,6 @@
 > **Windows taskbar balance monitor** — displays your DeepSeek API balance in real time on the Windows taskbar.
 
 ![Preview](preview.png)
-![Settings Preview](preview_settings.png)
 
 ## One-Click Build & Install
 

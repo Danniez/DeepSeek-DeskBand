@@ -9,7 +9,6 @@
 > **Windows 任务栏余额显示器** —— 在 Windows 任务栏实时显示 DeepSeek API 可用余额
 
 ![预览](preview.png)
-![设置预览](preview_settings.png)
 
 ## 一键编译安装
 
