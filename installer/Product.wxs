@@ -2,257 +2,183 @@
 <?define ProductVersion = "1.0.0.0" ?>
 <?define UpgradeCode = "A1B2C3D4-0000-0000-0000-000000000001" ?>
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
-  <Product Id="*"
-           Name="DeepSeek DeskBand"
+  <Package Name="DeepSeek DeskBand"
            Language="1033"
+           Codepage="65001"
            Version="$(var.ProductVersion)"
            Manufacturer="DeepSeek"
-           UpgradeCode="$(var.UpgradeCode)">
+           UpgradeCode="$(var.UpgradeCode)"
+           ProductCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567899"
+           InstallerVersion="500"
+           Compressed="yes"
+           Scope="perMachine">
 
-    <Package InstallerVersion="500"
-             Compressed="yes"
-             InstallScope="perMachine"
-             Platform="x64"
-             Manufacturer="DeepSeek"
-             Description="DeepSeek API 余额任务栏显示器"
-             Comments="Windows 任务栏 DeskBand 组件"
-             Keywords="DeepSeek,DeskBand,余额,API" />
-
-    <MediaTemplate EmbedCab="yes" />
+    <Media Id="1" Cabinet="app.cab" EmbedCab="yes" />
 
     <!-- 升级检测：自动卸载旧版本 -->
     <MajorUpgrade DowngradeErrorMessage="无法降级到旧版本" />
 
     <!-- ==================== 启动条件 ==================== -->
-    <PropertyRef Id="NETFRAMEWORK48" />
-    <Condition Message="此软件需要 .NET Framework 4.8 或更高版本。请从 https://dotnet.microsoft.com/download/dotnet-framework/net48 下载安装。">
-      Installed OR NETFRAMEWORK48
-    </Condition>
-
-    <Condition Message="此软件仅支持 64 位 Windows 系统。">
-      Installed OR VersionNT64
-    </Condition>
+    <Launch Condition="Installed OR VersionNT64"
+            Message="此软件仅支持 64 位 Windows 系统。" />
 
     <!-- ==================== 目录结构 ==================== -->
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFiles64Folder">
-        <Directory Id="MANUFACTURER" Name="DeepSeek">
-          <Directory Id="INSTALLDIR" Name="DeepSeek DeskBand">
-            <Component Id="ProductComponent" Guid="*">
-              <RemoveFile Id="PurgeInstallerFolder"
-                          Name="*.*"
-                          On="uninstall" />
-              <RemoveFolder Id="RemoveINSTALLDIR"
-                            On="uninstall" />
-            </Component>
-          </Directory>
-        </Directory>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLDIR" Name="DeepSeek DeskBand">
+        <Component Id="ProductComponent" Guid="A1B2C3D4-0001-0001-0001-000000000001">
+          <RemoveFile Id="PurgeInstallerFolder"
+                      Name="*.*"
+                      On="uninstall" />
+          <RemoveFolder Id="RemoveINSTALLDIR"
+                        On="uninstall" />
+        </Component>
+
+        <Component Id="Cmp_DeskBandDll"
+                   Guid="*">
+          <File Id="Fil_DeepSeekDeskBand.dll"
+                Name="DeepSeekDeskBand.dll"
+                Source="..\bin\Release\net481\DeepSeekDeskBand.dll"
+                KeyPath="yes" />
+
+          <File Id="Fil_StrongName.snk"
+                Name="StrongName.snk"
+                Source="..\StrongName.snk" />
+
+          <!-- CLSID 主键 -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="DeepSeek DeskBand" />
+          </RegistryKey>
+
+          <!-- InprocServer32 (Standard .NET COM entries) -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\InprocServer32"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="C:\Windows\System32\mscoree.dll" />
+            <RegistryValue Name="Assembly" Type="string" Value="DeepSeekDeskBand" />
+            <RegistryValue Name="Class" Type="string" Value="DeepSeekDeskBand.DeskBand" />
+            <RegistryValue Name="RuntimeVersion" Type="string" Value="v4.0.30319" />
+            <RegistryValue Name="CodeBase" Type="string" Value="[INSTALLDIR]DeepSeekDeskBand.dll" />
+            <RegistryValue Name="ThreadingModel" Type="string" Value="Both" />
+          </RegistryKey>
+
+          <!-- Assembly version subkey - RegAsm /codebase 会自动创建, .NET COM 解析必需 -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\InprocServer32\1.0.0.0"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Name="Assembly" Type="string" Value="DeepSeekDeskBand" />
+            <RegistryValue Name="Class" Type="string" Value="DeepSeekDeskBand.DeskBand" />
+            <RegistryValue Name="RuntimeVersion" Type="string" Value="v4.0.30319" />
+            <RegistryValue Name="CodeBase" Type="string" Value="[INSTALLDIR]DeepSeekDeskBand.dll" />
+          </RegistryKey>
+
+          <!-- ProgId under CLSID -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\ProgId"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="DeepSeek.DeskBand.1" />
+          </RegistryKey>
+
+          <!-- Implemented Categories -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\Implemented Categories\{00021492-0000-0000-C000-000000000046}"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes" />
+
+          <!-- ProgID -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\DeepSeek.DeskBand.1"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="DeepSeek DeskBand" />
+          </RegistryKey>
+
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\DeepSeek.DeskBand.1\CLSID"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}" />
+          </RegistryKey>
+
+          <!-- 无版本号 ProgID 别名 -->
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\DeepSeek.DeskBand"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="DeepSeek DeskBand" />
+          </RegistryKey>
+
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Classes\DeepSeek.DeskBand\CurVer"
+                       ForceCreateOnInstall="yes"
+                       ForceDeleteOnUninstall="yes">
+            <RegistryValue Type="string" Value="DeepSeek.DeskBand.1" />
+          </RegistryKey>
+        </Component>
       </Directory>
-    </Directory>
+    </StandardDirectory>
 
-    <!-- ==================== 文件列表 ==================== -->
-    <DirectoryRef Id="INSTALLDIR">
-      <!-- DeskBand DLL -->
-      <Component Id="Cmp_DeskBandDll"
-                 Guid="*"
-                 NeverOverwrite="no">
-        <File Id="Fil_DeepSeekDeskBand.dll"
-              Name="DeepSeekDeskBand.dll"
-              Source="..\bin\Release\net481\DeepSeekDeskBand.dll"
-              KeyPath="yes" />
-
-        <!-- 强名称密钥文件 -->
-        <File Id="Fil_StrongName.snk"
-              Name="StrongName.snk"
-              Source="..\StrongName.snk" />
-
-        <!-- ========== CLSID 注册（使 RegAsm /codebase 可工作） ========== -->
-        <!-- CLSID 主键 -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="DeepSeek DeskBand" />
-        </RegistryKey>
-
-        <!-- InprocServer32 —— .NET COM 通过 mscoree 加载 -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\InprocServer32"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="C:\Windows\System32\mscoree.dll" />
-          <RegistryValue Name="Assembly"
-                         Type="string"
-                         Value="DeepSeekDeskBand" />
-          <RegistryValue Name="Class"
-                         Type="string"
-                         Value="DeepSeekDeskBand.DeskBand" />
-          <RegistryValue Name="RuntimeVersion"
-                         Type="string"
-                         Value="v4.0.30319" />
-          <RegistryValue Name="CodeBase"
-                         Type="string"
-                         Value="[INSTALLDIR]DeepSeekDeskBand.dll" />
-          <RegistryValue Name="ThreadingModel"
-                         Type="string"
-                         Value="Both" />
-        </RegistryKey>
-
-        <!-- ProgId -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\ProgId"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="DeepSeek.DeskBand.1" />
-        </RegistryKey>
-
-        <!-- Implemented Categories —— 声明为 DeskBand -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\CLSID\{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}\Implemented Categories\{00021492-0000-0000-C000-000000000046}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes" />
-
-        <!-- ========== ProgID 注册 ========== -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\DeepSeek.DeskBand.1"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="DeepSeek DeskBand" />
-        </RegistryKey>
-
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\DeepSeek.DeskBand.1\CLSID"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}" />
-        </RegistryKey>
-
-        <!-- 无版本号 ProgID 别名 —— DeepSeek.DeskBand → DeepSeek.DeskBand.1 -->
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\DeepSeek.DeskBand"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="DeepSeek DeskBand" />
-        </RegistryKey>
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Classes\DeepSeek.DeskBand\CurVer"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string"
-                         Value="DeepSeek.DeskBand.1" />
-        </RegistryKey>
-
-        <!-- ========== 兼容：也写入 HKCR（实际是 HKLM\SOFTWARE\Classes 的映射） ========== -->
-        <!-- 上面的 HKLM\SOFTWARE\Classes 写入后 HKCR 自动可见 -->
-      </Component>
-    </DirectoryRef>
-
-    <!-- ==================== 功能与组件分组 ==================== -->
     <Feature Id="ProductFeature"
              Title="DeepSeek DeskBand"
              Level="1"
              Description="DeepSeek API 余额任务栏显示器组件"
-             Display="expand"
-             ConfigurableDirectory="INSTALLDIR">
+             Display="expand">
       <ComponentRef Id="ProductComponent" />
       <ComponentRef Id="Cmp_DeskBandDll" />
     </Feature>
 
-    <!-- ==================== 自定义操作：安装后刷新 Explorer ==================== -->
     <!-- ==================== 自定义操作 ==================== -->
-    <!-- 刷新 Explorer（安装/卸载后） -->
-    <CustomAction Id="RestartExplorer"
+    <CustomAction Id="RestartExplorerOnInstall"
+                  Directory="SystemFolder"
+                  ExeCommand="taskkill.exe /f /im explorer.exe &amp; start explorer.exe"
+                  Execute="immediate"
                   Impersonate="no"
-                  Execute="immediate"
-                  Directory="TARGETDIR"
-                  ExeCommand=""[SystemFolder]taskkill.exe" /f /im explorer.exe"
                   Return="ignore" />
 
-    <!-- 清除凭据管理器中的 API Key（卸载时） -->
+    <CustomAction Id="RestartExplorerOnUninstall"
+                  Directory="SystemFolder"
+                  ExeCommand="taskkill.exe /f /im explorer.exe &amp; start explorer.exe"
+                  Execute="immediate"
+                  Impersonate="no"
+                  Return="ignore" />
+
     <CustomAction Id="RemoveApiKeyCredential"
-                  Impersonate="yes"
+                  Directory="SystemFolder"
+                  ExeCommand="cmdkey.exe /delete:DeepSeekDeskBand:ApiKey"
                   Execute="immediate"
-                  Directory="TARGETDIR"
-                  ExeCommand=""[SystemFolder]cmdkey.exe" /delete:DeepSeekDeskBand:ApiKey"
+                  Impersonate="yes"
                   Return="ignore" />
 
-    <!-- 清除 LegacyGeneric 格式凭据（卸载时） -->
     <CustomAction Id="RemoveApiKeyCredentialLegacy"
-                  Impersonate="yes"
+                  Directory="SystemFolder"
+                  ExeCommand="cmdkey.exe /delete:LegacyGeneric:target=DeepSeekDeskBand:ApiKey"
                   Execute="immediate"
-                  Directory="TARGETDIR"
-                  ExeCommand=""[SystemFolder]cmdkey.exe" /delete:LegacyGeneric:target=DeepSeekDeskBand:ApiKey"
+                  Impersonate="yes"
                   Return="ignore" />
 
-    <!-- ==================== 安装/卸载流程 ==================== -->
     <InstallExecuteSequence>
-      <RemoveExistingProducts After="InstallValidate" />
-
-      <!-- 安装完成后刷新任务栏 -->
-      <Custom Action="RestartExplorer"
-              After="InstallFinalize">
-        NOT Installed AND NOT REMOVE
-      </Custom>
-
-      <!-- 卸载时先清凭据，再删文件，再刷新任务栏 -->
-      <Custom Action="RemoveApiKeyCredential"
-              Before="RemoveFiles">
-        REMOVE
-      </Custom>
-      <Custom Action="RemoveApiKeyCredentialLegacy"
-              Before="RemoveFiles">
-        REMOVE
-      </Custom>
-      <Custom Action="RestartExplorer"
-              After="RemoveFiles">
-        REMOVE
-      </Custom>
+      <!-- MajorUpgrade 已自动调度 RemoveExistingProducts，无需手动添加 -->
+      <Custom Action="RestartExplorerOnInstall" After="InstallFinalize" Condition="NOT Installed AND NOT REMOVE" />
+      <Custom Action="RemoveApiKeyCredential" Before="RemoveFiles" Condition="REMOVE" />
+      <Custom Action="RemoveApiKeyCredentialLegacy" Before="RemoveFiles" Condition="REMOVE" />
+      <Custom Action="RestartExplorerOnUninstall" After="RemoveFiles" Condition="REMOVE" />
     </InstallExecuteSequence>
 
-    <!-- ==================== 安装界面 ==================== -->
-    <UI Id="WixUI">
-      <UIRef Id="WixUI_Minimal" />
-      <UIRef Id="WixUI_ErrorProgressText" />
+    <!-- WiX v7 WixUI: 使用 ui:WixUI 元素替代旧的 UI 元素 -->
+    <ui:WixUI Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_ErrorProgressText" />
 
-      <!-- 自定义文字 -->
-      <TextStyle Id="WixUI_Font_Normal" FaceName="Segoe UI" Size="9" />
-      <TextStyle Id="WixUI_Font_Bigger" FaceName="Segoe UI" Size="12" />
+    <!-- WixUI_Minimal 已内置 ARPNOREMOVE/ARPNOMODIFY，无需重复定义 -->
+    <Property Id="ARPHELPLINK" Value="https://platform.deepseek.com/api_keys" />
 
-      <!-- 欢迎/完成页 -->
-      <DialogRef Id="WelcomeDlg" />
-      <DialogRef Id="ProgressDlg" />
-      <DialogRef Id="CompletedDlg" />
-
-      <Publish Dialog="WelcomeDlg"
-               Control="Next"
-               Event="NewDialog"
-               Value="VerifyReadyDlg"
-               Order="1">1</Publish>
-
-      <Publish Dialog="VerifyReadyDlg"
-               Control="Back"
-               Event="NewDialog"
-               Value="WelcomeDlg"
-               Order="1">1</Publish>
-
-      <Property Id="WIXUI_INSTALLDIR"
-                Value="INSTALLDIR" />
-    </UI>
-
-    <!-- ==================== 卸载时保留用户凭据的提示 ==================== -->
-    <Property Id="ARPNOREMOVE" Value="0" />
-    <Property Id="ARPNOMODIFY" Value="1" />
-    <Property Id="ARPHELPLINK"
-              Value="https://platform.deepseek.com/api_keys" />
-
-  </Product>
+  </Package>
 </Wix>
+

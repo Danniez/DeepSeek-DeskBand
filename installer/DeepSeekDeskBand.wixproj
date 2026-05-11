@@ -1,0 +1,19 @@
+<Project Sdk="WixToolset.Sdk/7.0.0">
+
+  <PropertyGroup>
+    <OutputName>DeepSeekDeskBand</OutputName>
+    <OutputType>msi</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <SuppressValidation>true</SuppressValidation>
+    <SuppressAclReset>true</SuppressAclReset>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
